@@ -3,29 +3,33 @@ import GuessCard from '../components/GuessCard'
 import Style from './Game.module.css'
 
 function Game() {
-    const [vtubers, setVtubers] = useState([
-        {
-            name: "Shiori",
-            company: "Hololive",
-            image: "https://static.miraheze.org/hololivewiki/0/03/Shiori_Novella_-_Portrait_01.png",
-            gen: "Advent",
-            hair_color: "Black White",
-            seiso_level: "Seiso",
-        },
-        {
-            name: "Enna",
-            company: "Nijisanji",
-            image: "https://yt3.googleusercontent.com/MKS8EHgSx1cC75IPUIf0zQefXweMfVpyUQxEQ_emFsTh-LTwODz6jXotb1q-QTrNpvPpf_sSuoM=s900-c-k-c0x00ffffff-no-rj",
-            gen: "Advent",
-            hair_color: "Silver",
-            seiso_level: "Unseiso",
-        }
-        
-    ]);
-    const [vtuberGuess, setVtuberGuess] = useState(vtubers[0]);
+    const [vtubers, setVtubers] = useState([]);
+    const [vtuberGuess, setVtuberGuess] = useState(null);
     const [playerGuess, setPlayerGuess] = useState("");
     const [allGuesses, setAllGuesses] = useState([]);
     const [victory, setVictory] = useState(false)
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchVtubers = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/vtubers', { mode: 'cors' });
+                if (!response.ok) {
+                    throw new Error('Issue with network response');
+                }
+                const data = await response.json();
+                setVtubers(data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchVtubers();
+    }, []);
+
+    useEffect(() => {
+        setVtuberGuess(vtubers[Math.floor(vtubers.length*Math.random())]);
+    }, [vtubers]);
 
     const handleGuess = (e) => {
         setPlayerGuess(e.target.value);
@@ -42,16 +46,17 @@ function Game() {
     const handleSubmit = (e)  => {
         e.preventDefault();
         setPlayerGuess('');
+        console.log(vtubers);
         
         const attemptGuess = playerGuess.toLowerCase();
-        if (attemptGuess === vtuberGuess.name.toLowerCase()) {
+        if (attemptGuess === vtuberGuess.first_name.toLowerCase()) {
             handleVictory();
         }
-        if (allGuesses.find((guess) => guess.name.toLowerCase() === attemptGuess)) {
+        if (allGuesses.find((guess) => guess.first_name.toLowerCase() === attemptGuess)) {
             alert("Already guessed this Vtuber!");
             return;
         }
-        const guessedVtuber = vtubers.find((vtuber) => vtuber.name.toLowerCase() === attemptGuess);
+        const guessedVtuber = vtubers.find((vtuber) => vtuber.first_name.toLowerCase() === attemptGuess);
         if (guessedVtuber) {
             setAllGuesses(prevGuesses => [...prevGuesses, guessedVtuber])
             console.log(victory);
@@ -64,6 +69,10 @@ function Game() {
         handleVictory();
         setAllGuesses([]);
         handleVtuberGuess();
+    }
+
+    if(isLoading) {
+        return <h1 id={Style.loading}>Loading...</h1>
     }
 
     return (

@@ -4,7 +4,7 @@ function GuessCard({guess, correctGuess}) {
     return (
         <div className={Style.card} >
             <div><img src={guess.image}></img></div>
-            <div className={guess.name === correctGuess.name ? Style.correct : Style.incorrect}>{guess.name}</div>
+            <div className={guess.first_name === correctGuess.first_name ? Style.correct : Style.incorrect}>{guess.first_name}</div>
             <div className={guess.company === correctGuess.company ? Style.correct : Style.incorrect}>{guess.company}</div>
             <div className={guess.gen === correctGuess.gen ? Style.correct : Style.incorrect}>{guess.gen}</div>
             <div className={guess.hair_color === correctGuess.hair_color ? Style.correct : Style.incorrect}>{guess.hair_color}</div>
