@@ -39,12 +39,12 @@ function Game() {
         setVtuberGuess(vtubers[Math.floor(vtubers.length*Math.random())]);
     };
 
-    function checkGuess(guess) {
-        
-    }
+   
 
     function handleSubmit (e) {
         e.preventDefault();
+        setPlayerGuess('');
+        
         const attemptGuess = playerGuess.toLowerCase();
         if (attemptGuess === vtuberGuess.name.toLowerCase()) {
             handleVictory();
@@ -67,14 +67,18 @@ function Game() {
             <h1>Wordle Vtuber</h1>
             <div>
                 <form id={Style.guess} onSubmit={handleSubmit}>
-                    <label>
-                        <h2>Guess the Vtuber</h2>
-                        <input type="text" value={playerGuess} onChange={handleGuess}></input>
-                    </label>
-                    <button type="submit">Enter</button>
+                    <h2>Guess the Vtuber</h2>
+                    <div>
+                        {victory ? null  : <input type="text" value={playerGuess} onChange={handleGuess}></input>}
+                        {victory ? null : <button type='submit'>Enter</button>}
+                    </div>
                 </form>
             </div>
-            <h2>{victory ? 'Victory!' : 'Guess Again!'}</h2>
+            {victory ? null :  <h2>{allGuesses.length != 0 ? 'Guess Again!' : null}</h2>}
+            {victory ? <div id={Style.victory}>
+                <h2>Victory!</h2>
+                <button>Play again</button>
+            </div> : null }
             <div id={Style.container}>
                 <div id={Style.cardsHeader}>
                     <ul>
