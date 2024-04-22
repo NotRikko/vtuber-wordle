@@ -39,9 +39,7 @@ function Game() {
         setVtuberGuess(vtubers[Math.floor(vtubers.length*Math.random())]);
     };
 
-   
-
-    function handleSubmit (e) {
+    const handleSubmit = (e)  => {
         e.preventDefault();
         setPlayerGuess('');
         
@@ -62,6 +60,12 @@ function Game() {
         }
     }
 
+    const newGame = () => {
+        handleVictory();
+        setAllGuesses([]);
+        handleVtuberGuess();
+    }
+
     return (
         <div id={Style.main}>
             <h1>Wordle Vtuber</h1>
@@ -77,7 +81,7 @@ function Game() {
             {victory ? null :  <h2>{allGuesses.length != 0 ? 'Guess Again!' : null}</h2>}
             {victory ? <div id={Style.victory}>
                 <h2>Victory!</h2>
-                <button>Play again</button>
+                <button onClick={newGame}>Play again</button>
             </div> : null }
             <div id={Style.container}>
                 <div id={Style.cardsHeader}>
