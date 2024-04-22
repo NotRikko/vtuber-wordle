@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import GuessCard from '../components/GuessCard'
 import Style from './Game.module.css'
 
 function Game() {
@@ -22,8 +23,25 @@ function Game() {
         
     ]);
     const [vtuberGuess, setVtuberGuess] = useState(vtubers[0]);
-    const [playerGuess, setPlayerGuess] = useState(null);
-    const [allGuesses, setAllGuesses] = useState(null);
+    const [playerGuess, setPlayerGuess] = useState("");
+    const [allGuesses, setAllGuesses] = useState([
+        {
+            name: "Enna",
+            company: "Nijisanji",
+            image: "https://yt3.googleusercontent.com/MKS8EHgSx1cC75IPUIf0zQefXweMfVpyUQxEQ_emFsTh-LTwODz6jXotb1q-QTrNpvPpf_sSuoM=s900-c-k-c0x00ffffff-no-rj",
+            gen: "Advent",
+            hair_color: "Silver",
+            seiso_level: "Unseiso",
+        },
+        {
+            name: "Shiori",
+            company: "Hololive",
+            image: "https://static.miraheze.org/hololivewiki/0/03/Shiori_Novella_-_Portrait_01.png",
+            gen: "Advent",
+            hair_color: "Black White",
+            seiso_level: "Seiso",
+        },
+    ]);
     const [victory, setVictory] = useState(false)
 
     const handleGuess = (e) => {
@@ -42,6 +60,11 @@ function Game() {
                     </label>
                     <button type="submit">Enter</button>
                 </form>
+            </div>
+            <div className={Style.cards}>
+                {allGuesses.map((guess, index) => {
+                    return <GuessCard key={index} guess={guess} correctGuess={vtuberGuess} />
+                })}
             </div>
         </div>
     )
