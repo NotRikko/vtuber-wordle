@@ -68,9 +68,7 @@ li {
     text-align: center;
 }
 
-ul {
-    display: flex;
-}
+
 
 #loading {
     display: flex;

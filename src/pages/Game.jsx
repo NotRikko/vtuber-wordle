@@ -1,12 +1,13 @@
 import {useEffect, useState} from 'react'
 import GuessCard from '../components/GuessCard'
+import AutoInput from '../components/autocomplete'
 import Navbar from '../components/Navbar'
 import Style from './Game.module.css'
 
 function Game() {
     const [vtubers, setVtubers] = useState([]);
     const [vtuberGuess, setVtuberGuess] = useState(null);
-    const [playerGuess, setPlayerGuess] = useState("");
+    const [playerGuess, setPlayerGuess] = useState("Guess");
     const [allGuesses, setAllGuesses] = useState([]);
     const [victory, setVictory] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
@@ -32,8 +33,8 @@ function Game() {
         setVtuberGuess(vtubers[Math.floor(vtubers.length*Math.random())]);
     }, [vtubers]);
 
-    const handleGuess = (e) => {
-        setPlayerGuess(e.target.value);
+    const handleGuess = (value) => {
+        setPlayerGuess(value);
     };
 
     const handleVictory = () => {
@@ -46,8 +47,8 @@ function Game() {
 
     const handleSubmit = (e)  => {
         e.preventDefault();
+        console.log(playerGuess);
         setPlayerGuess('');
-        console.log(vtubers);
         
         const attemptGuess = playerGuess.toLowerCase();
         if (attemptGuess === vtuberGuess.first_name.toLowerCase()) {
@@ -72,6 +73,8 @@ function Game() {
         handleVtuberGuess();
     }
 
+    
+
     if(isLoading) {
         return <h1 id={Style.loading}>Loading...</h1>
     }
@@ -84,7 +87,8 @@ function Game() {
                     <form id={Style.guess} onSubmit={handleSubmit}>
                         <h2>Guess the Vtuber</h2>
                         <div>
-                            {victory ? null  : <input type="text" value={playerGuess} onChange={handleGuess}></input>}
+                        <AutoInput vtubers={vtubers} onChange={handleGuess}/>
+                            {/*{victory ? null  : <input type="text" value={playerGuess} onChange={handleGuess}></input>}*/}
                             {victory ? null : <button type='submit'>Enter</button>}
                         </div>
                     </form>
