@@ -2,18 +2,26 @@
     position: fixed;
     top:0;
     left:0;
-    right: 0;
     z-index: 1000;
+    width: 100vw;
     border-bottom: 1px solid black;
-
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
 }
 
-.header {
-    display: flex;
-    justify-content: space-evenly;
-    gap: 25vw;
+.logo {
+    justify-self: center;
+    font-size: 1.3rem;
 }
 
 .rightHeader {
-    display : flex;
+    justify-self: right;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
+
+.rightHeader li{
+    width: 45px;
+}
+
