@@ -1,0 +1,19 @@
+.nav {
+    position: fixed;
+    top:0;
+    left:0;
+    right: 0;
+    z-index: 1000;
+    border-bottom: 1px solid black;
+
+}
+
+.header {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 25vw;
+}
+
+.rightHeader {
+    display : flex;
+}

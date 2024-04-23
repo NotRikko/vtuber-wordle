@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react'
 import GuessCard from '../components/GuessCard'
+import Navbar from '../components/Navbar'
 import Style from './Game.module.css'
 
 function Game() {
@@ -76,41 +77,43 @@ function Game() {
     }
 
     return (
-        <div id={Style.main}>
-            <h1>Wordle Vtuber</h1>
-            <div>
-                <form id={Style.guess} onSubmit={handleSubmit}>
-                    <h2>Guess the Vtuber</h2>
-                    <div>
-                        {victory ? null  : <input type="text" value={playerGuess} onChange={handleGuess}></input>}
-                        {victory ? null : <button type='submit'>Enter</button>}
+        <>
+            <Navbar />
+            <div id={Style.main}>
+                <div>
+                    <form id={Style.guess} onSubmit={handleSubmit}>
+                        <h2>Guess the Vtuber</h2>
+                        <div>
+                            {victory ? null  : <input type="text" value={playerGuess} onChange={handleGuess}></input>}
+                            {victory ? null : <button type='submit'>Enter</button>}
+                        </div>
+                    </form>
+                </div>
+                {victory ? null :  <h2>{allGuesses.length != 0 ? 'Guess Again!' : null}</h2>}
+                {victory ? <div id={Style.victory}>
+                    <h2>Victory!</h2>
+                    <button onClick={newGame}>Play again</button>
+                </div> : null }
+                <div id={Style.container}>
+                    <div id={Style.cardsHeader}>
+                        <ul>
+                            <li>Results</li>
+                            <li>Name</li>
+                            <li>Company</li>
+                            <li>Gen</li>
+                            <li>Hair Color</li>
+                            <li>Seiso Meter</li>
+                        </ul>
                     </div>
-                </form>
-            </div>
-            {victory ? null :  <h2>{allGuesses.length != 0 ? 'Guess Again!' : null}</h2>}
-            {victory ? <div id={Style.victory}>
-                <h2>Victory!</h2>
-                <button onClick={newGame}>Play again</button>
-            </div> : null }
-            <div id={Style.container}>
-                <div id={Style.cardsHeader}>
-                    <ul>
-                        <li>Results</li>
-                        <li>Name</li>
-                        <li>Company</li>
-                        <li>Gen</li>
-                        <li>Hair Color</li>
-                        <li>Seiso Meter</li>
-                    </ul>
+                    <div className={Style.cards}>
+                        {allGuesses.map((guess, index) => {
+                            return <GuessCard key={index} guess={guess} correctGuess={vtuberGuess} />
+                        })}
+                    </div>
                 </div>
-                <div className={Style.cards}>
-                    {allGuesses.map((guess, index) => {
-                        return <GuessCard key={index} guess={guess} correctGuess={vtuberGuess} />
-                    })}
-                </div>
+                
             </div>
-            
-        </div>
+        </>
     )
 }
 
