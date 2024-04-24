@@ -1,0 +1,24 @@
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 9vh;
+}
+
+#header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 70vw;
+    justify-items: center;
+    border-bottom: 1px solid black;
+}
+
+
+
+.cardboard_card {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    text-align: flex-start;
+    width: 70vw;
+}

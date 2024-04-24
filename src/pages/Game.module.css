@@ -46,7 +46,8 @@
 }
 
 #cardsHeader ul {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
     justify-content: flex-start;
     gap: 10px;
     width: 100%;

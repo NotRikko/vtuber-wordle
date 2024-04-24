@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import Game from './pages/Game'
 
 import './App.css'
