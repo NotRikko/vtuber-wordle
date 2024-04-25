@@ -1,16 +1,27 @@
-import {useEffect, useState} from 'react'
-import GuessCard from '../components/GuessCard'
-import AutoInput from '../components/autocomplete'
-import Navbar from '../components/Navbar'
-import Style from './Game.module.css'
+import {useEffect, useState} from 'react';
+import GuessCard from '../components/GuessCard';
+import TextField from '@mui/material/TextField';
+import { Box, Typography, Avatar } from '@mui/material'
+
+
+//import AutoInput from '../components/autocomplete'
+import Autocomplete from '@mui/material/Autocomplete';
+
+import Navbar from '../components/Navbar';
+import Style from './Game.module.css';
 
 function Game() {
     const [vtubers, setVtubers] = useState([]);
     const [vtuberGuess, setVtuberGuess] = useState(null);
-    const [playerGuess, setPlayerGuess] = useState("Guess");
+    const [playerGuess, setPlayerGuess] = useState('');
     const [allGuesses, setAllGuesses] = useState([]);
     const [victory, setVictory] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
+
+    const options = vtubers.map((vtuber) => ({
+        name: vtuber.first_name,
+        image: vtuber.image
+    }));
 
     useEffect(() => {
         const fetchVtubers = async () => {
@@ -32,10 +43,6 @@ function Game() {
     useEffect(() => {
         setVtuberGuess(vtubers[Math.floor(vtubers.length*Math.random())]);
     }, [vtubers]);
-
-    const handleGuess = (value) => {
-        setPlayerGuess(value);
-    };
 
     const handleVictory = () => {
         setVictory(!victory);
@@ -87,8 +94,38 @@ function Game() {
                     <form id={Style.guess} onSubmit={handleSubmit}>
                         <h2>Guess the Vtuber</h2>
                         <div>
-                        <AutoInput vtubers={vtubers} onChange={handleGuess}/>
-                            {/*{victory ? null  : <input type="text" value={playerGuess} onChange={handleGuess}></input>}*/}
+                        <Autocomplete
+                            disablePortal
+                            options={options}
+                            onChange={(event,value) => setPlayerGuess(value?.name || '')}
+                            inputValue={playerGuess}
+                            onInputChange={(event, newInputValue) => {
+                                setPlayerGuess(newInputValue)
+                            }}
+                            autoHighlight={true}
+                            sx={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} label="Vtubers" />}
+                            renderOption={(props, option) => (
+                            <Box
+                                component="li"
+                                sx={{ display: 'flex', alignItems: 'center', gap: 2, width: "500px" }}
+                                {...props}
+                            >
+                                <Avatar
+                                alt={option.name}
+                                src={option.image} 
+                                />
+                                <Typography variant="body1">{option.name}</Typography>
+                            </Box>
+                            )}
+                            getOptionLabel={(option) => option.name}
+                            filterOptions={(options, { inputValue }) =>
+                                    options.filter(option =>
+                                        option.name.toLowerCase().includes(inputValue.toLowerCase())
+                                    )
+                                }
+                        />
+                        
                             {victory ? null : <button type='submit'>Enter</button>}
                         </div>
                     </form>

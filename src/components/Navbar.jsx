@@ -1,5 +1,4 @@
 import Style from './Navbar.module.css'
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
