@@ -54,7 +54,6 @@ function Game() {
 
     const handleSubmit = (e)  => {
         e.preventDefault();
-        console.log(playerGuess);
         setPlayerGuess('');
         
         const attemptGuess = playerGuess.toLowerCase();
