@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
 import Scoreboard from './pages/Scoreboard.jsx'
+import Signup from './pages/SignUp.jsx'
+import Login from './pages/Login.jsx'
 import './index.css'
 
 const router = createBrowserRouter([
@@ -13,6 +15,14 @@ const router = createBrowserRouter([
   {
     path: '/leaderboard',
     element: <Scoreboard />
+  },
+  {
+    path: '/signup',
+    element: <Signup />
+  },
+  {
+    path: '/login',
+    element: <Login />
   }
 ])
 

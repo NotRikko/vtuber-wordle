@@ -78,3 +78,69 @@ li {
     align-items: center;
     margin-top: 40vh;
 }
+
+/*Signup Page */
+#signup_page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}
+
+#signup_page h1 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+#signup_page h2 {
+    font-size: 1.3rem;
+}
+
+#signup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    height: 70vh;
+    width: 30vw;
+    border: 1px solid black;
+    padding: 50px;
+}
+#signup_form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 90%;
+    gap: 2.5vh;
+}
+
+#signup_form button {
+    margin-top: 1vh;
+    align-self: center;
+    height: 3.5vh;
+    width: 50%;
+}
+
+.signup_sec {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.signup_sec input {
+    height: 2.5vh;
+    font-size: 1rem;
+}
+
+@media (orientation: portrait) and (max-width: 950px) {
+    #signup {
+        width: 80vw;
+        height: 85vh;
+        padding: 15px;
+    }
+
+}
+
+
