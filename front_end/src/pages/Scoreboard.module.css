@@ -3,12 +3,13 @@
     flex-direction: column;
     align-items: center;
     padding-top: 9vh;
+    gap: 3vh;
 }
 
 #header {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    width: 70vw;
+    width: 80vw;
     justify-items: center;
     border-bottom: 1px solid black;
 }
@@ -20,5 +21,10 @@
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     text-align: flex-start;
-    width: 70vw;
+    width: 80vw;
+    font-size: 1.2rem;
+}
+
+.cardboard_card p {
+    text-align: left;
 }
