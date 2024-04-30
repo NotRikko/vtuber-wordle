@@ -118,7 +118,7 @@ li {
     flex-direction: column;
     text-align: left;
     width: 90%;
-    gap: 3.6vh;
+    gap: 2vh;
 }
 
 #signup_form button {
@@ -137,13 +137,21 @@ li {
 }
 
 .signup_sec input {
-    height: 3.2vh;
+    height: 3.4vh;
     font-size: 1rem;
     font-size: 1.2rem;
 }
 
 .signup_sec input:invalid {
     
+}
+
+.error_msg {
+    color: rgb(214, 22, 22);
+    margin: 0;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
+    height: 0;
 }
 
 @media (orientation: portrait) and (max-width: 600px) {

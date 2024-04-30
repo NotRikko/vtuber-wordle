@@ -1,13 +1,16 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Style from './Game.module.css'
 
 function SignUp() {
-    
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         user_name: '',
         email: '',
         password: '',
     });
+
+    const [errorData, setErrorData] = useState(null);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -16,6 +19,7 @@ function SignUp() {
 
     const handleSubmit =  async (e) => {
         e.preventDefault();
+        setErrorData(null);
         try {
             const response = await fetch('http://localhost:3000/users/user_create_post', {
             method: 'POST',
@@ -27,10 +31,16 @@ function SignUp() {
             body: JSON.stringify(formData),
             });
             if(!response.ok) {
-                throw new Error('Network response was not ok.');
+                throw new Error('Network response was not ok.');s
             }
             const data = await response.json();
             console.log(data);
+            if(data.created === false) {
+                setErrorData(data.errors)
+            } else if(data.created === true){
+                console.log('navigating')
+                navigate('/login')
+            }
         } catch(error) {
             console.error('Error:', error);
         }
@@ -55,6 +65,14 @@ function SignUp() {
                             value={formData.user_name}
                             onChange={handleInputChange}
                         />
+                        {errorData && (
+                        errorData.map((error) => {
+                        if (error.path === 'user_name') {
+                            return <p  className={Style.error_msg} key={error.path}>{error.msg}</p>;
+                        }
+                        return null;
+                         })
+                        )}
                     </div>
                     <div className={Style.signup_sec}>
                         <label for='email'>Email</label>
@@ -65,6 +83,14 @@ function SignUp() {
                         value={formData.email}
                         onChange={handleInputChange}
                         />
+                        {errorData && (
+                        errorData.map((error) => {
+                        if (error.path === 'email') {
+                            return <p className={Style.error_msg} key={error.path}>{error.msg}</p>;
+                        }
+                        return null;
+                         })
+                        )}
                     </div>
                     <div className={Style.signup_sec}>
                         <label for='password'>Password</label>
@@ -75,6 +101,14 @@ function SignUp() {
                         value={formData.password}
                         onChange={handleInputChange}
                         />
+                        {errorData && (
+                        errorData.map((error) => {
+                        if (error.path === 'password') {
+                            return <p className={Style.error_msg} key={error.path}>{error.msg}</p>;
+                        }
+                        return null;
+                         })
+                        )}
                     </div>
                     <div className={Style.signup_sec}>
                         <label for='confirm_password'>Confirm Password</label>

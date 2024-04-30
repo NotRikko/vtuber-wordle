@@ -10,23 +10,23 @@ exports.user_post = [
     .custom(async value => {
         const user = await User.findOne({ user_name: value });
         if(user) {
-            throw new Error('Username already in use');
+            throw new Error('Username already in use!');
         }
     }),
 
     body('password')
     .trim()
     .isLength({ min: 7 })
-    .withMessage('Password must be at least 7 characters long')
+    .withMessage('Password must be at least 7 characters long!')
     .custom(value => {
         if (!/\d/.test(value)) {
-            throw new Error('Password must contain at least one number');
+            throw new Error('Password must contain at least one number!');
         }
         return true;
     })
     .custom(value => {
         if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-          throw new Error('Password must contain at least one special character');
+          throw new Error('Password must contain at least one special character!');
         }
         return true;
     })
@@ -55,9 +55,11 @@ exports.user_post = [
             admin: false,
         });
         if(!errors.isEmpty()) {
-            res.send({ user: user, errors: errors.array()})
+            console.log(errors.array());
+            res.send({ errors: errors.array(), created: false})
         } else {
             await user.save();
+            res.send({ created: true })
         }
     })
     
