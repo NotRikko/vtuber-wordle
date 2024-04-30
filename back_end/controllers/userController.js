@@ -3,12 +3,12 @@ const asyncHandler = require('express-async-handler')
 const { body, validationResult } = require('express-validator');
 
 exports.user_post = [
-    body('username', 'Name must be longer than 3 characters')
+    body('user_name', 'Name must be longer than 3 characters')
     .trim()
     .isLength({ min: 3 })
     .escape()
     .custom(async value => {
-        const user = await User.findOne({ name: value });
+        const user = await User.findOne({ user_name: value });
         if(user) {
             throw new Error('Username already in use');
         }
@@ -36,7 +36,7 @@ exports.user_post = [
     .trim()
     .isEmail()
     .custom(async value => {
-        const existingEmail = await User.find({ email: value });
+        const existingEmail = await User.findOne({ email: value });
         if(existingEmail) {
             throw new Error('This email is already taken!');
         }
@@ -64,6 +64,6 @@ exports.user_post = [
 
 ]
 
-exports.user_get = asyncHandler(async, (req, res, next) => {
-    const user = await User.findById(req.body.)
+exports.user_get = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.body.id)
 })
