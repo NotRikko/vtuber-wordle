@@ -28,7 +28,7 @@ async function main() {
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = 'secret';
+opts.secretOrKey = process.env.ACCESS_TOKEN_SECRET;
 
 passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
   console.log(jwt_payload.id);

@@ -1,14 +1,20 @@
 const User = require('../models/user')
+const RefreshToken = require('../models/refreshtoken')
 const asyncHandler = require('express-async-handler')
 const { body, validationResult } = require('express-validator')
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-;
+require('dotenv').config();
+
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+
+
 let refreshTokens = []
 
 function generateAccessToken(user) {
-    return jwt.sign({ id: user }, 'secret', { expiresIn: '15s'})
+    return jwt.sign({ id: user }, accessTokenSecret , { expiresIn: '15s'})
 }
 
 exports.user_post = [
@@ -69,33 +75,44 @@ exports.user_post = [
             res.json({ errors: errors.array(), created: false})
         } else {
             await user.save();
-            console.log('success')
             res.json({ created: true })
         }
     })
 ]
-
 exports.user_validate = asyncHandler(async (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        console.log(err);
-        if(err) {
-            return next(err);
-        }
-        if (!user) {
-            return res.json( {authenticated: false, message: info.message });
-        }
-        const accessToken = generateAccessToken(user._id);
-        const refreshToken = jwt.sign({ id: user._id }, 'secret2');
-        refreshTokens.push(refreshToken);
-        return res.json({ authenticated: true, user, accessToken, refreshToken })
-    })(req, res, next)
-})
+    passport.authenticate('local', async (err, user, info) => {
+        try {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                return res.status(401).json({ authenticated: false, message: info.message });
+            }
+            
+            const accessToken = generateAccessToken(user._id);
+            const refreshToken = jwt.sign({ id: user._id }, refreshTokenSecret);
+            
+            const newRefreshToken = new RefreshToken({
+                token: refreshToken,
+                userId: user._id
+            });
+            await newRefreshToken.save();
 
-exports.token = asyncHandler(async (req, res, next) => {
+            return res.json({ authenticated: true, user, accessToken, refreshToken });
+        } catch (error) {
+            return next(error);
+        }
+    })(req, res, next);
+});
+
+exports.user_token = asyncHandler(async (req, res, next) => {
     const refreshToken = req.body.token;
     if(refreshToken === null) return res.sendStatus(401);
-    if(!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
-    jwt.verify(refreshToken, 'secret2', (err, user) => {
+    const tokenExists = await RefreshToken.findOne({token: refreshToken});
+    if(!tokenExists) {
+        return res.sendStatus(403);
+    }
+    jwt.verify(refreshToken, refreshTokenSecret, (err, user) => {
         if(err) return res.sendStatus(403);
         const accessToken = generateAccessToken(user.id)
         res.json({ accessToken: accessToken })
@@ -120,8 +137,12 @@ exports.user_session = asyncHandler(async (req, res, next) => {
     })(req, res, next);
 });
 
-exports.user_logout = asyncHandler(async (req, rex, next) => {
-    refreshTokens = refreshTokens.filter(token => token !== req.body.token);
+exports.user_logout = asyncHandler(async (req, res, next) => {
+    const refreshToken = req.body.token;
+    if(!refreshToken) {
+        return res.sendStatus(400)
+    }
+    await RefreshToken.findOneAndDelete({ token: refreshToken })
     res.sendStatus(204);
 })
 
