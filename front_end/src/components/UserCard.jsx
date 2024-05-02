@@ -3,7 +3,7 @@ import { useUser } from '../UserProvder'
 
 
 function UserCard () {
-    const {user} = useUser();
+    const {user, handleLogout} = useUser();
     return (
         <div id={Style.user_card}>
             <img src={user.image} />
@@ -16,7 +16,7 @@ function UserCard () {
                 <h2>Change profile picture</h2>
                 <h2>Change username</h2>
                 <h2>Change password</h2>
-                <h2>Log out</h2>
+                <h2 onClick={handleLogout}>Log out</h2>
             </div>
         </div>
     )

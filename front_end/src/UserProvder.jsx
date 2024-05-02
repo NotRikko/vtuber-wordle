@@ -44,7 +44,7 @@ export const UserProvider = ({ children }) => {
             try {
                 const token = localStorage.getItem('accesstoken');
                 console.log(token);
-                if (token) {
+                if(token) {
                     const response = await fetch('http://localhost:3100/users/user_session', {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -77,9 +77,6 @@ export const UserProvider = ({ children }) => {
         fetchUserData(); 
     }, []);
 
-    
-
-
 
     const handleLoginStatus = () => {
         setIsLoggedIn(!isLoggedIn);
@@ -89,8 +86,35 @@ export const UserProvider = ({ children }) => {
         setUser(user);
     }
 
+    const handleLogout = async () => {
+        const token = localStorage.getItem('refreshtoken');
+        console.log(token);
+        if(token) {
+            const response = await fetch('http://localhost:3100/users/logout', {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            token: token
+                        })
+                    });
+            if(response.status === 204) {
+                localStorage.removeItem('accesstoken');
+                localStorage.removeItem('refreshtoken');
+                setIsLoggedIn(false);
+                setUser({});
+            } else {
+                console.log('Failed to logout')
+            }
+        } else {
+            console.log('No refresh token found')
+        }
+    }
+
     return (
-        <UserContext.Provider value={{ isLoggedIn, user, handleLoginStatus, handleUser}}>
+        <UserContext.Provider value={{ isLoggedIn, user, handleLoginStatus, handleUser, handleLogout}}>
             {children}
         </UserContext.Provider>
     )
