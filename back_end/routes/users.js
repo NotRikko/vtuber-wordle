@@ -8,5 +8,6 @@ router.post('/login', user_controller.user_validate);
 router.post('/logout', user_controller.user_logout);
 router.get('/user_session', user_controller.user_session);
 router.post('/token', user_controller.user_token);
-
+router.put('/change-username', user_controller.user_change_username);
+router.put('/change-password', user_controller.user_change_password);
 module.exports = router;

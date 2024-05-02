@@ -14,7 +14,7 @@ const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 let refreshTokens = []
 
 function generateAccessToken(user) {
-    return jwt.sign({ id: user }, accessTokenSecret , { expiresIn: '15s'})
+    return jwt.sign({ id: user }, accessTokenSecret , { expiresIn: '1d'})
 }
 
 exports.user_post = [
@@ -127,13 +127,7 @@ exports.user_session = asyncHandler(async (req, res, next) => {
         if (!user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-
-        req.login(user, { session: false }, (err) => {
-            if (err) {
-                return next(err);
-            }
-            return res.json(user);
-        });
+        res.status(200).json(user);       
     })(req, res, next);
 });
 
@@ -146,6 +140,12 @@ exports.user_logout = asyncHandler(async (req, res, next) => {
     res.sendStatus(204);
 })
 
+exports.user_change_username = asyncHandler(async (req, res, next) => {
+})
+
+exports.user_change_password = asyncHandler(async (req, res, next) => {
+    
+})
 
 
 

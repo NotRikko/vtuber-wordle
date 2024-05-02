@@ -3,8 +3,6 @@ const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
-const session = require('express-session')
-const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const cors = require('cors')
 const User = require('./models/user')
@@ -65,25 +63,10 @@ passport.use(
   })
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-})
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
-})
-
-
 
 const usersRouter = require('./routes/users');
 
 const app = express();
-
 
 
 // view engine setup
@@ -96,20 +79,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.use(session({ 
-  secret: 'cats', 
-  resave: false, 
-  saveUninitialized: true,
-  store: MongoStore.create({
-    mongoUrl: mongoDB,
-  }),
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24
-  }
-}));
-
-app.use(passport.session());
 
 app.use(cors());
 
