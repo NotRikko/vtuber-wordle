@@ -2,12 +2,8 @@ import {useEffect, useState} from 'react';
 import GuessCard from '../components/GuessCard';
 import TextField from '@mui/material/TextField';
 import { Box, Typography, Avatar } from '@mui/material'
-
-
-//import AutoInput from '../components/autocomplete'
 import Autocomplete from '@mui/material/Autocomplete';
-
-import Navbar from '../components/Navbar';
+import Overlay from '../components/Overlay';
 import Style from './Game.module.css';
 
 function Game() {
@@ -87,7 +83,7 @@ function Game() {
 
     return (
         <>
-            <Navbar />
+            <Overlay />
             <div id={Style.main}>
                 <div>
                     <form id={Style.guess} onSubmit={handleSubmit}>

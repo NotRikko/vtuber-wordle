@@ -5,7 +5,7 @@ import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { NavLink } from 'react-router-dom';
 
-function Navbar() {
+function Navbar({handleVisible}) {
     return (
         <nav className={Style.nav}>
             <NavLink exact to='/'><HomeRoundedIcon id={Style.home} /></NavLink>
@@ -13,7 +13,7 @@ function Navbar() {
             <ul className={Style.rightHeader}>
                 <NavLink exact to ='/leaderboard'><li><BarChartRoundedIcon /></li></NavLink>
                 <NavLink><li><LightModeRoundedIcon /></li></NavLink>
-                <NavLink><li><SettingsRoundedIcon /></li></NavLink>
+                <li><button style={{padding:'0', border: 'none', backgroundColor: 'white'}}onClick={handleVisible}><SettingsRoundedIcon /></button></li>
             </ul>
         </nav>
     )

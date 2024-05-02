@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import Overlay from '../components/Overlay';
 import Style from './Game.module.css'
 
 function SignUp() {
@@ -21,7 +22,7 @@ function SignUp() {
         e.preventDefault();
         setErrorData(null);
         try {
-            const response = await fetch('http://localhost:3000/users/user_create_post', {
+            const response = await fetch('http://localhost:3100/users', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
@@ -38,7 +39,6 @@ function SignUp() {
             if(data.created === false) {
                 setErrorData(data.errors)
             } else if(data.created === true){
-                console.log('navigating')
                 navigate('/login')
             }
         } catch(error) {
@@ -53,7 +53,7 @@ function SignUp() {
                 <div id={Style.signup_header}>
                     <h1>Join Vordle</h1>
                     <h2>Keep track of your scores</h2>
-                    <h2>Already have an account? <a href='' style={{ color: 'rgb(155, 185, 177)' }}>Log in.</a></h2>
+                    <h2>Already have an account? <Link exact to='/login' style={{ color: 'rgb(155, 185, 177)' }}>Log in.</Link></h2>
                 </div>
                 <form id={Style.signup_form} onSubmit={handleSubmit}>
                     <div className={Style.signup_sec}>

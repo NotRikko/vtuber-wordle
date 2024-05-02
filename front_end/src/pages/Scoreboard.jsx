@@ -1,4 +1,4 @@
-import Navbar from '../components/Navbar'
+import Overlay from '../components/Overlay';
 import Style from './Scoreboard.module.css'
 
 function Scoreboard () {
@@ -21,7 +21,7 @@ function Scoreboard () {
     ]
     return (
         <div id={Style.main}>
-            <Navbar />
+            <Overlay />
             <h1>Leaderboard</h1>
             <div>
                 <div id={Style.header}>
@@ -33,7 +33,10 @@ function Scoreboard () {
                     {topUsers.map((user, index) => {
                         return <div key={index} className={Style.cardboard_card}>
                             <p>{user.rank}</p>
-                            <p>{user.name}</p>
+                            <div>
+                                <img src= {user.image}/>
+                                <p>{user.name}</p>
+                            </div>
                             <p>{user.score}</p>
                         </div>
                     })}

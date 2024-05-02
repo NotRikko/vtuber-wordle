@@ -1,13 +1,14 @@
 .nav {
-    position: fixed;
+    position: absolute;
     top:0;
     left:0;
-    z-index: 1000;
+    z-index: 5;
     width: 100vw;
     border-bottom: 1px solid black;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     align-items: center;
+    background-color: white;
 }
 
 .logo {
