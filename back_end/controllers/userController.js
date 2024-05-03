@@ -141,11 +141,31 @@ exports.user_logout = asyncHandler(async (req, res, next) => {
 })
 
 exports.user_change_username = asyncHandler(async (req, res, next) => {
+    const username = req.body.username;
+    const newUsername = req.body.newData;
+    if(!newUsername) {
+        return res.sendStatus(400)
+    }
+    const updatedUser = await User.findOneAndUpdate({ user_name: username }, { user_name: newUsername }, { new: true});
+    if(!updatedUser) {
+        return res.status(404).send('User not found');
+    }
+    return res.status(200).json(updatedUser)
 })
 
 exports.user_change_password = asyncHandler(async (req, res, next) => {
-    
+    const username = req.body.username;
+    const newPassword = req.body.newData;
+    if(!newPassword) {
+        return res.sendStatus(400)
+    }
+    const updatedUser = await User.findOneAndUpdate({ user_name: username }, {password: newPassword }, { new: true});
+    if(!updatedUser) {
+        return res.status(404).send('User not found');
+    }
+    return res.status(200).json(updatedUser)
 })
+
 
 
 
