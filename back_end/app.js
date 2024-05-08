@@ -63,6 +63,7 @@ passport.use(
 );
 
 
+const userRouter = require('./routes/user');
 const usersRouter = require('./routes/users');
 
 const app = express();
@@ -81,6 +82,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors());
 
+app.use('/user', userRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
