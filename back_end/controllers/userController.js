@@ -5,13 +5,25 @@ const { body, validationResult } = require('express-validator')
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-require('dotenv').config();
+const multer = require('multer')
+
+const cloudinary = require('cloudinary').v2
+require('dotenv').config()
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage })
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 
 
-let refreshTokens = []
 
 function generateAccessToken(user) {
     return jwt.sign({ id: user }, accessTokenSecret , { expiresIn: '1d'})
@@ -141,6 +153,17 @@ exports.user_logout = asyncHandler(async (req, res, next) => {
 })
 
 exports.user_change_username = asyncHandler(async (req, res, next) => {
+    body('newData', 'Name must be longer than 3 characters')
+    .trim()
+    .isLength({ min: 3 })
+    .escape()
+    .custom(async value => {
+        const user = await User.findOne({ user_name: value });
+        if(user) {
+            throw new Error('Username already in use!');
+        }
+    })
+    
     const username = req.body.username;
     const newUsername = req.body.newData;
     if(!newUsername) {
@@ -154,18 +177,93 @@ exports.user_change_username = asyncHandler(async (req, res, next) => {
 })
 
 exports.user_change_password = asyncHandler(async (req, res, next) => {
+    body('newData')
+    .trim()
+    .isLength({ min: 7 })
+    .withMessage('Password must be at least 7 characters long!')
+    .custom(value => {
+        if (!/\d/.test(value)) {
+            throw new Error('Password must contain at least one number!');
+        }
+        return true;
+    })
+    .custom(value => {
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+          throw new Error('Password must contain at least one special character!');
+        }
+        return true;
+    })
+    .escape()
+
     const username = req.body.username;
-    const newPassword = req.body.newData;
+    const hashedPassword =  await bcrypt.hash(req.body.newData, 10);
     if(!newPassword) {
         return res.sendStatus(400)
     }
-    const updatedUser = await User.findOneAndUpdate({ user_name: username }, {password: newPassword }, { new: true});
+    const updatedUser = await User.findOneAndUpdate({ user_name: username }, {password: hashedPassword }, { new: true});
     if(!updatedUser) {
         return res.status(404).send('User not found');
     }
     return res.status(200).json(updatedUser)
 })
 
+
+exports.user_change_picture = async (req, res, next) => {
+    try {
+        upload.single('image')(req, res, async (err) => {
+            
+            const image = req.file;
+            console.log(image);
+            if (!image) {
+                console.log('Please upload an image');
+                return res.status(400).json({ message: 'Please upload an image' });
+            }
+
+            try {
+                const b64 = Buffer.from(image.buffer).toString('base64');
+                let dataURI = 'data:' + image.mimetype + ';base64,' + b64;
+                // Upload image to Cloudinary
+                
+                const cloudinaryUpload = await cloudinary.uploader.upload(dataURI, {
+                    resource_type: 'auto',
+                });
+
+                // Update user's profile picture URL in the database
+                const username = req.body.username;
+                const updatedUser = await User.findOneAndUpdate(
+                    { user_name: username },
+                    { image: cloudinaryUpload.secure_url },
+                    { new: true }
+                );
+
+                if (!updatedUser) {
+                    return res.status(404).send('User not found');
+                }
+
+                return res.status(200).json(updatedUser);
+            } catch (uploadError) {
+                console.error('Error uploading profile picture to Cloudinary:', uploadError);
+                return res.status(500).json({ message: 'Image upload failed', error: uploadError });
+            }
+        });
+    } catch (error) {
+        console.error('Error handling file upload:', error);
+        return res.status(500).json({ message: 'Internal server error', error });
+    }
+};
+
+exports.user_update_score = asyncHandler(async (req, res, next) => {
+    const username = req.body.username;
+    const newScore = req.body.high_score;
+    if(!newScore) {
+        return res.sendStatus(400);
+    }
+    const updatedUser = await User.findOneAndUpdate({ user_name: username }, {high_score: newScore }, { new: true});
+    if(!updatedUser) {
+        return res.status(404).send('User not found');
+    }
+    return res.status(200).json(updatedUser)
+})
 
 
 

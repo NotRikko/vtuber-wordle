@@ -11,7 +11,6 @@ const JwtStrategy = require('passport-jwt').Strategy
 const jwt = require('jsonwebtoken')
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const bcrypt = require('bcryptjs')
-
 require('dotenv').config();
 
 
