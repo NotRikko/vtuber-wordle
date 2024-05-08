@@ -52,7 +52,8 @@ function UserCard () {
             })
         });
         if (response.status === 200) {
-            setUser(response);
+            const updatedUser = await response.json();
+            setUser(updatedUser);
             handleLogout();
         } else {
             console.log('Failed to update');
@@ -71,7 +72,9 @@ function UserCard () {
         });
 
         if (response.status === 200) {
-            setUser(response);
+            const updatedUser = await response.json();
+            setUser(updatedUser);
+            setIsEditing(false);
         } else {
             console.log('Failed to update profile picture');
         }
