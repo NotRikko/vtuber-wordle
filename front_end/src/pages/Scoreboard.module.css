@@ -19,12 +19,27 @@
 .cardboard_card {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
     justify-items: center;
+    align-items: center;
     text-align: flex-start;
     width: 80vw;
     font-size: 1.2rem;
 }
 
+
 .cardboard_card p {
     text-align: left;
+}
+
+.user_info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+}
+
+.user_info img {
+    width: 15%;
+    margin: 5%;
 }

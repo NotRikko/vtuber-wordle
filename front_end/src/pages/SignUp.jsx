@@ -21,7 +21,7 @@ function SignUp() {
         e.preventDefault();
         setErrorData(null);
         try {
-            const response = await fetch('http://localhost:3100/users', {
+            const response = await fetch('http://localhost:3100/user/user_create', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',

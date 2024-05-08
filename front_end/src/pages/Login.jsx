@@ -21,7 +21,7 @@ function Login() {
     const handleSubmit =  async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:3100/users/login', {
+            const response = await fetch('http://localhost:3100/user/login', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',

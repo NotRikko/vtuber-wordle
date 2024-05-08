@@ -110,9 +110,9 @@ function UserCard () {
                     <h2>Current Score: {user.current_score}</h2>
                 </div>
                 <div style={{ fontSize: '1rem', marginTop: '10%'}}>
-                    <h2 onClick={() => handleEdit('Profile Picture', 'http://localhost:3100/users/change_picture')}>Change profile picture</h2>
-                    <h2 onClick={() => handleEdit('Username', 'http://localhost:3100/users/change_username')}>Change username</h2>
-                    <h2 onClick={() => handleEdit('Password', 'http://localhost:3100/users/change_password')}>Change password</h2>
+                    <h2 onClick={() => handleEdit('Profile Picture', 'http://localhost:3100/user/change_picture')}>Change profile picture</h2>
+                    <h2 onClick={() => handleEdit('Username', 'http://localhost:3100/user/change_username')}>Change username</h2>
+                    <h2 onClick={() => handleEdit('Password', 'http://localhost:3100/user/change_password')}>Change password</h2>
                     <h2 onClick={handleLogout}>Log out</h2>
                 </div>
             </div>
