@@ -88,7 +88,6 @@ export const UserProvider = ({ children }) => {
 
     const handleLogout = async () => {
         const token = localStorage.getItem('refreshtoken');
-        console.log(token);
         if(token) {
             const response = await fetch('http://localhost:3100/users/logout', {
                         method: 'POST',
@@ -113,8 +112,9 @@ export const UserProvider = ({ children }) => {
         }
     }
 
+
     return (
-        <UserContext.Provider value={{ isLoggedIn, user, handleLoginStatus, handleUser, handleLogout}}>
+        <UserContext.Provider value={{ isLoggedIn, user, setUser, handleLoginStatus, handleUser, handleLogout}}>
             {children}
         </UserContext.Provider>
     )

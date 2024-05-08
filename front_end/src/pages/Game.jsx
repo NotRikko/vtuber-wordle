@@ -1,18 +1,23 @@
 import {useEffect, useState} from 'react';
 import GuessCard from '../components/GuessCard';
+import TimeLeft from '../components/TimeLeft';
 import TextField from '@mui/material/TextField';
 import { Box, Typography, Avatar } from '@mui/material'
 import Autocomplete from '@mui/material/Autocomplete';
 import Overlay from '../components/Overlay';
 import Style from './Game.module.css';
+import { useUser } from '../UserProvder'
+
 
 function Game() {
     const [vtubers, setVtubers] = useState([]);
-    const [vtuberGuess, setVtuberGuess] = useState(null);
+    const [dailyVtuber, setDailyVtuber] = useState(null);
     const [playerGuess, setPlayerGuess] = useState('');
     const [allGuesses, setAllGuesses] = useState([]);
     const [victory, setVictory] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
+    const [score, setScore] = useState(0);
+    const { user, setUser } = useUser();
 
     const options = vtubers.map((vtuber) => ({
         name: vtuber.first_name,
@@ -20,40 +25,74 @@ function Game() {
     }));
 
     useEffect(() => {
-        const fetchVtubers = async () => {
-            try {
-                const response = await fetch('http://localhost:3000/vtubers', { mode: 'cors' });
-                if (!response.ok) {
-                    throw new Error('Issue with network response');
-                }
-                const data = await response.json();
-                setVtubers(data);
-                setIsLoading(false);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+
+    })
+
+    const fetchData = async () => {
+        try {
+            const [vtubersResponse, dailyVtuberResponse] = await Promise.all([
+                fetch('http://localhost:3000/vtubers', { mode: 'cors' }),
+                fetch('http://localhost:3000/vtubers/daily_vtuber', { mode: 'cors' })
+            ]);
+
+            if (!vtubersResponse.ok || !dailyVtuberResponse.ok) {
+                throw new Error('Issue with network response');
             }
-        };
-        fetchVtubers();
-    }, []);
+
+            const vtubersData = await vtubersResponse.json();
+            const dailyVtuberData = await dailyVtuberResponse.json();
+
+            setVtubers(vtubersData);
+            setDailyVtuber(dailyVtuberData);
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-        setVtuberGuess(vtubers[Math.floor(vtubers.length*Math.random())]);
-    }, [vtubers]);
-
-    const handleVictory = () => {
-        setVictory(!victory);
+        fetchData();
+    }, []); 
+ 
+   
+    const handleVictory = async () => {
+        const updatedScore = score + 1;
+        setScore(updatedScore);
+        setVictory(true);
+        console.log(user);
+        if(updatedScore > user.high_score) {
+            const response = await fetch('http://localhost:3100/users/update_score', {
+                    method: 'PUT',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: user.user_name,
+                        high_score: updatedScore
+                    })
+                });
+           
+            if(response.status === 200) {
+                const updatedUser = await response.json();
+                setUser(updatedUser);
+            } else {
+                console.log('Failed to set score')
+            }
+        } else {
+            return
+        }
     };
 
-    const handleVtuberGuess = () => {
-        setVtuberGuess(vtubers[Math.floor(vtubers.length*Math.random())]);
-    };
+
 
     const handleSubmit = (e)  => {
         e.preventDefault();
         setPlayerGuess('');
         
         const attemptGuess = playerGuess.toLowerCase();
-        if (attemptGuess === vtuberGuess.first_name.toLowerCase()) {
+        if (attemptGuess === dailyVtuber.first_name.toLowerCase()) {
             handleVictory();
         }
         if (allGuesses.find((guess) => guess.first_name.toLowerCase() === attemptGuess)) {
@@ -70,9 +109,9 @@ function Game() {
     }
 
     const newGame = () => {
-        handleVictory();
+        fetchData();
+        setVictory(false);
         setAllGuesses([]);
-        handleVtuberGuess();
     }
 
     
@@ -86,6 +125,9 @@ function Game() {
             <Overlay />
             <div id={Style.main}>
                 <div>
+                    {victory ?
+                    <TimeLeft />
+                    :
                     <form id={Style.guess} onSubmit={handleSubmit}>
                         <h2>Guess the Vtuber</h2>
                         <div>
@@ -124,6 +166,8 @@ function Game() {
                             {victory ? null : <button type='submit'>Enter</button>}
                         </div>
                     </form>
+                    
+                    }
                 </div>
                 {victory ? null :  <h2>{allGuesses.length != 0 ? 'Guess Again!' : null}</h2>}
                 {victory ? <div id={Style.victory}>
@@ -143,7 +187,7 @@ function Game() {
                     </div>
                     <div className={Style.cards}>
                         {allGuesses.map((guess, index) => {
-                            return <GuessCard key={index} guess={guess} correctGuess={vtuberGuess} />
+                            return <GuessCard key={index} guess={guess} correctGuess={dailyVtuber} />
                         })}
                     </div>
                 </div>
