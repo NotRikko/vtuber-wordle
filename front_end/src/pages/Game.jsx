@@ -31,8 +31,8 @@ function Game() {
     const fetchData = async () => {
         try {
             const [vtubersResponse, dailyVtuberResponse] = await Promise.all([
-                fetch('http://localhost:3000/vtubers', { mode: 'cors' }),
-                fetch('http://localhost:3000/vtubers/daily_vtuber', { mode: 'cors' })
+                fetch('https://vtuber-api.onrender.com/vtubers', { mode: 'cors' }),
+                fetch('https://vtuber-api.onrender.com/daily_vtuber', { mode: 'cors' })
             ]);
 
             if (!vtubersResponse.ok || !dailyVtuberResponse.ok) {

@@ -8,8 +8,8 @@
 
 #header {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    width: 80vw;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    width: 60vw;
     justify-items: center;
     border-bottom: 1px solid black;
 }
@@ -18,12 +18,11 @@
 
 .cardboard_card {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1.5fr 1fr;
     grid-template-rows: 1fr;
     justify-items: center;
     align-items: center;
-    text-align: flex-start;
-    width: 80vw;
+    width: 60vw;
     font-size: 1.2rem;
 }
 
@@ -33,13 +32,30 @@
 }
 
 .user_info {
-    display: flex;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    justify-content: center;
-    gap: 2vw;
+    gap: 5%;
+    overflow: hidden;
 }
 
 .user_info img {
-    width: 15%;
-    margin: 5%;
+    justify-self: right;
+    width: 35%;
+    min-width: 40px;
+    margin: 10%;
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+@media screen and (max-width: 650px){
+    .cardboard_card {
+        font-size: 1rem;
+    }
+    
+    #header, .cardboard_card {
+        width: 80vw;
+    }
 }
