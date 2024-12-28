@@ -21,7 +21,7 @@ function SignUp() {
         e.preventDefault();
         setErrorData(null);
         try {
-            const response = await fetch('http://localhost:3100/user/user_create', {
+            const response = await fetch('https://vtuber-wordle-1.onrender.com/user/user_create', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',

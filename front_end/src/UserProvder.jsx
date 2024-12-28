@@ -17,7 +17,7 @@ export const UserProvider = ({ children }) => {
             try {
                 const token = localStorage.getItem('refreshtoken');
                 if (token) {
-                    const response = await fetch('http://localhost:3100/user/token', {
+                    const response = await fetch('https://vtuber-wordle-1.onrender.com/user/token', {
                         method: 'POST',
                         mode: 'cors',
                         headers: {
@@ -45,7 +45,7 @@ export const UserProvider = ({ children }) => {
                 const token = localStorage.getItem('accesstoken');
                 console.log(token);
                 if(token) {
-                    const response = await fetch('http://localhost:3100/user/user_session', {
+                    const response = await fetch('https://vtuber-wordle-1.onrender.com/user/user_session', {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
@@ -54,7 +54,7 @@ export const UserProvider = ({ children }) => {
                         await refreshToken();
                         const newToken = localStorage.getItem('accesstoken');
                         if(newToken) {
-                            const refreshedResponse = await fetch('http://localhost:3100/user/user_session', {
+                            const refreshedResponse = await fetch('https://vtuber-wordle-1.onrender.com/user/user_session', {
                                 headers: {
                                     Authorization: `Bearer ${newToken}`
                                 }
@@ -89,7 +89,7 @@ export const UserProvider = ({ children }) => {
     const handleLogout = async () => {
         const token = localStorage.getItem('refreshtoken');
         if(token) {
-            const response = await fetch('http://localhost:3100/user/logout', {
+            const response = await fetch('https://vtuber-wordle-1.onrender.com/user/logout', {
                         method: 'POST',
                         mode: 'cors',
                         headers: {
