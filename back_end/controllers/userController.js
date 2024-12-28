@@ -91,6 +91,7 @@ exports.user_post = [
         }
     })
 ]
+
 exports.user_validate = asyncHandler(async (req, res, next) => {
     passport.authenticate('local', async (err, user, info) => {
         try {
