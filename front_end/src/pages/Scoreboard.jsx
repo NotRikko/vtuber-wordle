@@ -9,7 +9,7 @@ function Scoreboard () {
    useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3100/users', { mode: 'cors' });
+                const response = await fetch('https://vtuber-wordle-1.onrender.com/users', { mode: 'cors' });
                 if (!response.ok) {
                     throw new Error('Issue with network response');
                 }
