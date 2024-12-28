@@ -62,7 +62,7 @@ function Game() {
         setVictory(true);
         console.log(user);
         if(updatedScore > user.high_score) {
-            const response = await fetch('http://localhost:3100/user/update_score', {
+            const response = await fetch('https://vtuber-api.onrender.com/user/update_score', {
                     method: 'PUT',
                     mode: 'cors',
                     headers: {

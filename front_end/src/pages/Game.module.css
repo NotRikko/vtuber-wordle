@@ -161,11 +161,6 @@ li {
 }
 
 
-
-.signup_sec input:invalid {
-    
-}
-
 .error_msg {
     color: rgb(214, 22, 22);
     margin: 0;
